@@ -20,11 +20,12 @@ const firebaseConfig = {
     players: {
       0: "",
       1: ""
-    }
-    
+    },
+    gameStarted: false
   };
 
   let currentPlayerName; // Variable to store the current player's name
+  let gameStartNotified = false; // Variable to track if the game start message has been displayed
   
   // Function to generate a random lobby ID
   function generateLobbyID() {
@@ -99,6 +100,7 @@ function listenForChanges(lobbyID) {
       gameState.board = lobbyData.board;
       gameState.currentPlayer = lobbyData.currentPlayer;
       gameState.players = lobbyData.players;
+      gameState.gameStarted = lobbyData.gameStarted;
 
       updateBoardUI(); // Update the UI with the latest board data
 
@@ -106,6 +108,20 @@ function listenForChanges(lobbyID) {
       const winner = checkForWin();
       if (winner !== null) {
         showGameOverScreen(winner);
+      } else if (gameState.board.every(row => row.every(cell => cell !== ""))) {
+        showGameOverScreen(null); // Call showGameOverScreen with null winner for a tie
+      }
+
+      // Check if the second player has joined and the game has started, and the game start message hasn't been displayed
+      if (!gameStartNotified && lobbyData.players[1] !== "" && lobbyData.gameStarted) {
+        const messageElement = document.getElementById('message');
+        messageElement.classList.remove('hidden');
+
+        setTimeout(function() {
+          messageElement.classList.add('hidden');
+        }, 2000);
+
+        gameStartNotified = true; // Set the gameStartNotified variable to true to prevent multiple notifications
       }
     }
   });
@@ -203,19 +219,19 @@ function listenForChanges(lobbyID) {
     return null;
   }
 
-  function checkGameOver() {
-    const winnerIndex = checkForWin();
-  
-    if (winnerIndex !== null) {
-      const winner = gameState.players[winnerIndex];
-      showGameOverScreen(winner);
-      return;
-    }
-  
-    if (gameState.board.every(row => row.every(cell => cell !== ""))) {
-      showGameOverScreen(null); // Call showGameOverScreen with null winner for a tie
-    }
+function checkGameOver() {
+  const winnerIndex = checkForWin();
+
+  if (winnerIndex !== null) {
+    const winner = gameState.players[winnerIndex];
+    showGameOverScreen(winner);
+    return;
   }
+
+  if (gameState.board.every(row => row.every(cell => cell !== ""))) {
+    showGameOverScreen(null); // Call showGameOverScreen with null winner for a tie
+  }
+}
   
   // Event listener for the create lobby button
   document.getElementById("create-lobby-button").addEventListener("click", function () {
@@ -257,7 +273,7 @@ document.getElementById("submit-join-lobby-button").addEventListener("click", fu
 
   // Display the lobby code
   document.getElementById("lobby-code").style.display = "block";
-  document.getElementById("lobby-code-text").textContent = "Joined lobby: " + enteredLobbyID;
+  document.getElementById("lobby-code-text").textContent = "Lobby Code: " + enteredLobbyID;
 });
 
 
