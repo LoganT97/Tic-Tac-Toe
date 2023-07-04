@@ -1,0 +1,180 @@
+html {
+    font-family: "roboto", sans-serif;
+    font-size: 16px;
+}
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+.header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 32px;
+    padding-bottom: 0px;
+    width: 690px;
+    margin: auto;
+    margin-bottom: 0px;
+}
+.title > h1 {
+    margin-bottom: 5px;
+    margin-top: 17px;
+    user-select: none;
+}
+.menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+    margin: 0 auto;
+    gap: 16px;
+    font-size: 16px;
+}
+.main {
+    display: grid;
+    grid-template-columns: repeat(3, 225px);
+    grid-template-rows: repeat(3, 225px);
+    grid-gap: 8px;
+    justify-content: center;
+    align-items: center;
+    width: 690px;
+    margin: auto;
+    background-color: black;
+    border: 8px solid black;   
+    border-radius: 16px;
+    margin-top: 8px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
+div.main > div {
+    width: 225px;
+    height: 225px;
+    background-color: white;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 215px;
+    font-weight: 700;
+    user-select: none;
+}
+div.main > div:hover {
+    background-color: #f5f5f5;
+    box-shadow: rgba(0, 0, 0, 0.24) inset 0px 3px 8px;
+}
+button {
+    appearance: button;
+    backface-visibility: hidden;
+    background-color: #405cf5;
+    border-radius: 6px;
+    border-width: 0;
+    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset,rgba(50, 50, 93, .1) 0 2px 5px 0,rgba(0, 0, 0, .07) 0 1px 1px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    font-family: -apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif;
+    font-size: 100%;
+    height: 44px;
+    line-height: 1.15;
+    margin: 0px 0 0;
+    outline: none;
+    overflow: hidden;
+    padding: 0 25px;
+    position: relative;
+    text-align: center;
+    text-transform: none;
+    transform: translateZ(0);
+    transition: all .2s,box-shadow .08s ease-in;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 100%;
+}
+button:disabled {
+    cursor: default;
+}
+button:focus {
+    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .2) 0 6px 15px 0, rgba(0, 0, 0, .1) 0 2px 2px 0, rgba(50, 151, 211, .3) 0 0 0 4px;
+}
+.footer {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    font-size: 18px;
+    font-weight: 600;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+  }
+  .footer > p {
+    margin: 12px;
+    padding: 0;
+  }
+  .footer > svg {
+    width: 25px;
+    height: 25px;
+  }
+  #lobby-creation, #lobby-joining {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 690px;
+    height: 100%;
+  }
+  #lobby-creation > input, #lobby-joining > input {
+    width: 47%;
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    padding: 0 10px;
+    font-size: 18px;
+    outline: none;
+    text-align: center;
+  }
+  #lobby-creation > button, #lobby-joining > button {
+    margin: 0;
+    width: 50%;
+    font-size: 18px;
+  }
+  #lobby-code-text {
+    font-size: 33px;
+    font-weight: 600;
+    margin-bottom: 0px;
+    margin-top: 8px;
+  }
+  .game-over-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black background */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px); /* apply a slight blur */
+    z-index: 9999; /* make sure it appears above other elements */
+  }
+  
+  .game-over-screen > p {
+    font-size: 50px;
+    color: white;
+    margin-bottom: 16px;
+  }
+  
+  .game-over-screen > button {
+    padding: 8px 16px;
+    font-size: 24px;
+    font-weight: 700;
+    width: 400px;
+    height: 75px;
+  }
