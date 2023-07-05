@@ -26,7 +26,7 @@ This is a simple multiplayer tic-tac-toe game built using Firebase and JavaScrip
 
 ## Live Link
 
-You can try the game live at [Tic-Tac-Toe Multiplayer]((https://logant97.github.io/Tic-Tac-Toe/)).
+You can try the game live at [Tic-Tac-Toe Multiplayer](https://logant97.github.io/Tic-Tac-Toe/).
 
 ## Screenshots
 
