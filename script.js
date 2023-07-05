@@ -1,43 +1,43 @@
 // Initialize Firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyCobGwKjprqbRZiGUOUwcF_0srE2R0awBI",
-    authDomain: "tic-tac-toe-496f4.firebaseapp.com",
-    databaseURL: "https://tic-tac-toe-496f4-default-rtdb.firebaseio.com",
-    projectId: "tic-tac-toe-496f4",
-    storageBucket: "tic-tac-toe-496f4.appspot.com",
-    messagingSenderId: "191237097238",
-    appId: "1:191237097238:web:3c456c55502e8420e2f237"
-  };
+  apiKey: "AIzaSyCobGwKjprqbRZiGUOUwcF_0srE2R0awBI",
+  authDomain: "tic-tac-toe-496f4.firebaseapp.com",
+  databaseURL: "https://tic-tac-toe-496f4-default-rtdb.firebaseio.com",
+  projectId: "tic-tac-toe-496f4",
+  storageBucket: "tic-tac-toe-496f4.appspot.com",
+  messagingSenderId: "191237097238",
+  appId: "1:191237097238:web:3c456c55502e8420e2f237"
+};
   
-  firebase.initializeApp(firebaseConfig);
-  const database = firebase.database();
-  const lobbyRef = database.ref('lobbies');
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+const lobbyRef = database.ref('lobbies');
   
   // Declare and initialize gameState variable
-  let gameState = {
-    currentPlayer: 0,
-    board: [['', '', ''], ['', '', ''], ['', '', '']],
-    players: {
-      0: "",
-      1: ""
-    },
-    gameStarted: false
-  };
+let gameState = {
+  currentPlayer: 0,
+  board: [['', '', ''], ['', '', ''], ['', '', '']],
+  players: {
+    0: "",
+    1: ""
+  },
+  gameStarted: false
+};
 
-  let currentPlayerName; // Variable to store the current player's name
-  let gameStartNotified = false; // Variable to track if the game start message has been displayed
+let currentPlayerName; // Variable to store the current player's name
+let gameStartNotified = false; // Variable to track if the game start message has been displayed
   
-  // Function to generate a random lobby ID
-  function generateLobbyID() {
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let id = "";
-    for (let i = 0; i < 6; i++) {
-      id += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return id;
+// Function to generate a random lobby ID
+function generateLobbyID() {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let id = "";
+  for (let i = 0; i < 6; i++) {
+    id += characters.charAt(Math.floor(Math.random() * characters.length));
   }
+  return id;
+}
 
-  let lobbyID;
+let lobbyID;
   
 // Function to create a new lobby
 function createLobby(playerName) {
@@ -127,97 +127,95 @@ function listenForChanges(lobbyID) {
   });
 }
   
-  // Function to update the UI with the latest board data
-  function updateBoardUI() {
-    const cells = document.querySelectorAll(".main > div");
-    cells.forEach((cell, index) => {
-      const row = Math.floor(index / 3);
-      const col = index % 3;
-      cell.textContent = gameState.board[row][col];
+// Function to update the UI with the latest board data
+function updateBoardUI() {
+  const cells = document.querySelectorAll(".main > div");
+  cells.forEach((cell, index) => {
+    const row = Math.floor(index / 3);
+    const col = index % 3;
+    cell.textContent = gameState.board[row][col];
+  });
+}
+  
+// Function to show lobby creation UI
+function showLobbyCreation() {
+  document.getElementById("lobby-creation").style.display = "flex";
+  document.getElementById("lobby-joining").style.display = "none";
+}
+  
+// Function to show lobby joining UI
+function showLobbyJoining() {
+  document.getElementById("lobby-creation").style.display = "none";
+  document.getElementById("lobby-joining").style.display = "flex";
+}
+  
+// Function to get the current player's marker ('X' or 'O')
+function currentPlayerMarker() {
+  return gameState.currentPlayer === 0 ? "X" : "O";
+}
+  
+function handlePlayerMove(event, lobbyID) {
+  const clickedCell = event.target;
+  const cellIndex = parseInt(clickedCell.dataset.index);
+  const row = Math.floor(cellIndex / 3);
+  const col = cellIndex % 3;
+  
+  if (Array.isArray(gameState.board[row]) && gameState.board[row][col] === "") {
+    gameState.board[row][col] = currentPlayerMarker();
+  
+    // Update the game state
+    gameState.currentPlayer = 1 - gameState.currentPlayer; 
+    const lobbyRef = database.ref("lobbies/" + lobbyID);
+    lobbyRef.update({
+      board: gameState.board,
+      currentPlayer: gameState.currentPlayer
     });
+    updateBoardUI(); // Update the UI with the latest board data
   }
-  
-  // Function to show lobby creation UI
-  function showLobbyCreation() {
-    document.getElementById("lobby-creation").style.display = "flex";
-    document.getElementById("lobby-joining").style.display = "none";
-  }
-  
-  // Function to show lobby joining UI
-  function showLobbyJoining() {
-    document.getElementById("lobby-creation").style.display = "none";
-    document.getElementById("lobby-joining").style.display = "flex";
-  }
-  
-  // Function to get the current player's marker ('X' or 'O')
-  function currentPlayerMarker() {
-    return gameState.currentPlayer === 0 ? "X" : "O";
-  }
-  
-  function handlePlayerMove(event, lobbyID) {
-    const clickedCell = event.target;
-    const cellIndex = parseInt(clickedCell.dataset.index);
-    const row = Math.floor(cellIndex / 3);
-    const col = cellIndex % 3;
-  
-    if (Array.isArray(gameState.board[row]) && gameState.board[row][col] === "") {
-      gameState.board[row][col] = currentPlayerMarker();
-  
-      // Update the game state
-      gameState.currentPlayer = 1 - gameState.currentPlayer;
-  
-      const lobbyRef = database.ref("lobbies/" + lobbyID);
-      lobbyRef.update({
-        board: gameState.board,
-        currentPlayer: gameState.currentPlayer
-      });
-  
-      updateBoardUI(); // Update the UI with the latest board data
-    }
-  }
+}
 
-  function checkForWin() {
-    // Check rows
-    for (let i = 0; i < 3; i++) {
-      if (
-        gameState.board[i][0] !== "" &&
-        gameState.board[i][0] === gameState.board[i][1] &&
-        gameState.board[i][1] === gameState.board[i][2]
-      ) {
-        return gameState.board[i][0] === "X" ? 0 : 1;
-      }
-    }
-  
-    // Check columns
-    for (let i = 0; i < 3; i++) {
-      if (
-        gameState.board[0][i] !== "" &&
-        gameState.board[0][i] === gameState.board[1][i] &&
-        gameState.board[1][i] === gameState.board[2][i]
-      ) {
-        return gameState.board[0][i] === "X" ? 0 : 1;
-      }
-    }
-  
-    // Check diagonals
+function checkForWin() {
+  // Check rows
+  for (let i = 0; i < 3; i++) {
     if (
-      gameState.board[0][0] !== "" &&
-      gameState.board[0][0] === gameState.board[1][1] &&
-      gameState.board[1][1] === gameState.board[2][2]
+      gameState.board[i][0] !== "" &&
+      gameState.board[i][0] === gameState.board[i][1] &&
+      gameState.board[i][1] === gameState.board[i][2]
     ) {
-      return gameState.board[0][0] === "X" ? 0 : 1;
+      return gameState.board[i][0] === "X" ? 0 : 1;
     }
-    if (
-      gameState.board[0][2] !== "" &&
-      gameState.board[0][2] === gameState.board[1][1] &&
-      gameState.board[1][1] === gameState.board[2][0]
-    ) {
-      return gameState.board[0][2] === "X" ? 0 : 1;
-    }
-  
-    // No winner yet
-    return null;
   }
+  
+  // Check columns
+  for (let i = 0; i < 3; i++) {
+    if (
+      gameState.board[0][i] !== "" &&
+      gameState.board[0][i] === gameState.board[1][i] &&
+      gameState.board[1][i] === gameState.board[2][i]
+    ) {
+      return gameState.board[0][i] === "X" ? 0 : 1;
+    }
+  }
+  
+  // Check diagonals
+  if (
+    gameState.board[0][0] !== "" &&
+    gameState.board[0][0] === gameState.board[1][1] &&
+    gameState.board[1][1] === gameState.board[2][2]
+  ) {
+    return gameState.board[0][0] === "X" ? 0 : 1;
+  }
+  if (
+    gameState.board[0][2] !== "" &&
+    gameState.board[0][2] === gameState.board[1][1] &&
+    gameState.board[1][1] === gameState.board[2][0]
+  ) {
+    return gameState.board[0][2] === "X" ? 0 : 1;
+  }
+  
+  // No winner yet
+  return null;
+}
 
 function checkGameOver() {
   const winnerIndex = checkForWin();
@@ -233,12 +231,12 @@ function checkGameOver() {
   }
 }
   
-  // Event listener for the create lobby button
-  document.getElementById("create-lobby-button").addEventListener("click", function () {
-    showLobbyCreation();
-  });
-  
 // Event listener for the create lobby button
+document.getElementById("create-lobby-button").addEventListener("click", function () {
+    showLobbyCreation();
+});
+  
+// Event listener for the submit create lobby button
 document.getElementById("submit-create-lobby-button").addEventListener("click", function () {
   const playerName = document.getElementById("create-player-name-input").value;
   const lobbyID = createLobby(playerName);
@@ -254,12 +252,12 @@ document.getElementById("submit-create-lobby-button").addEventListener("click", 
   document.getElementById("lobby-code-text").textContent = lobbyCode;
 });
   
-  // Event listener for the join lobby button
-  document.getElementById("join-lobby-button").addEventListener("click", function () {
-    showLobbyJoining();
-  });
-  
 // Event listener for the join lobby button
+document.getElementById("join-lobby-button").addEventListener("click", function () {
+  showLobbyJoining();
+});
+  
+// Event listener for the submit join lobby button
 document.getElementById("submit-join-lobby-button").addEventListener("click", function () {
   const playerName = document.getElementById("join-player-name-input").value;
   const enteredLobbyID = document.getElementById("join-lobby-id-input").value;
